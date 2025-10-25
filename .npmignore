@@ -1,0 +1,19 @@
+# Source files
+src/
+lib/
+
+# Config files
+vite.config.ts
+tsconfig.json
+.gitignore
+
+# Development
+node_modules/
+*.log
+
+# Assets
+public/
+index.html
+
+# Build artifacts
+*.tsbuildinfo
