@@ -1,6 +1,15 @@
 /**
- * IndexedDB-backed Storage implementation
- * Implements the Storage interface using IndexedDB as the underlying storage mechanism
+ * `Storage`-compatible class backed by IndexedDB.
+ *
+ * All reads are served from an in-memory cache populated at construction time,
+ * so `getItem` / `key` / `length` are synchronous. Writes (`setItem`,
+ * `removeItem`, `clear`) update the cache immediately and flush to IndexedDB
+ * asynchronously.
+ *
+ * @example
+ * const store = new IndexedDBStorage("MyApp", "settings");
+ * store.setItem("theme", "dark");
+ * store.getItem("theme"); // "dark"
  */
 export class IndexedDBStorage implements Storage {
   private dbName: string;
@@ -102,8 +111,15 @@ export class IndexedDBStorage implements Storage {
 }
 
 /**
- * Creates an IndexedDB storage instance
- * Returns "ssr" if running in a server-side environment
+ * Factory for `IndexedDBStorage`.
+ *
+ * Prefer this over calling `new IndexedDBStorage()` directly when the database
+ * name or store name may be `undefined` — it passes them through so the class
+ * defaults apply.
+ *
+ * @param dbName - IndexedDB database name (defaults to `"AppStorage"`).
+ * @param storeName - Object store name within the database (defaults to `"keyval"`).
+ * @returns A new `IndexedDBStorage` instance.
  */
 export const createIndexedDBStorage = (
   dbName?: string,
